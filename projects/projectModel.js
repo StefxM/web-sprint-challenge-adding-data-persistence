@@ -30,6 +30,11 @@ function findTasksById(id){
     .first();
 }
 
+function findTaskByProject(project_id){
+    return db('task')
+    .where({project_id})
+}
+
 function addProject(project){
     return db('projects')
     .insert(project)
@@ -64,4 +69,5 @@ module.exports = {
     addProject,
     addResource,
     addTask,
+    findTaskByProject,
 }

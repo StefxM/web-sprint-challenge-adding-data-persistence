@@ -26,12 +26,13 @@ exports.up = function(knex) {
           table.text('task_note')
           table.boolean('task_complete')
               .defaultTo(false);
+        table.integer('project_id').references('projects.id').onUpdate('CASCADE').onDelete('CASCADE');
       })
       .createTable('project_items', (table) => {
           table.integer('project_id').references('projects.id').onUpdate('CASCADE').onDelete('CASCADE');
           table.integer('resource_id').references('resource.id').onUpdate('CASCADE').onUpdate('CASCADE');
-          table.integer('task_id').references('task.id').onUpdate('CASCADE').onDelete('CASCADE');
-          table.primary(['project_id','resource_id','task_id'])
+         
+          table.primary(['project_id','resource_id'])
       })
   
   };
