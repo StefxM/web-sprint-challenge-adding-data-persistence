@@ -10,45 +10,74 @@
 */
 const express = require('express');
 
-const Projects = require('./projectModel');
+const db = require('./projectModel');
 
 const router = express.Router();
 
+router.post('/', async (req,res) =>{
+   const projectData = req.body
 
-//working, replace with the projects
-router.get('/', (req,res) => {
-    Projects.getProjects()
+   db.addProject(projectData)
+   .then(project => {
+       res.status(201).json(project)
+   })
+   .catch(err => {
+       res.status(500).json({message:"cannot add project"})
+   })
+})
+router.get('/' , async (req,res) => {
+    await db.findProject()
     .then(projects => {
-        res.status(200).json(projects);
+        res.json(projects);
     })
-    .catch(error => {
-        res.status(500).json({message: 'unable to get projects'})
-    })
-})
-
-router.get('/resources', (req,res) => {
-    Projects.getResources()
-    .then(resource=> {
-        res.status(200).json(resource);
-    })
-    .catch(error => {
-        res.status(500).json({message: 'unable to get resources'})
-    })
-})
-router.get('/tasks', (req,res) => {
-    Projects.getTasks()
-    .then(task=> {
-        res.status(200).json(task);
-    })
-    .catch(error => {
-        res.status(500).json({message: 'unable to get resources'})
+    .catch(err => {
+        res.status(500).json({message: "Cant retrieve projects"})
     })
 })
 
-router.post('/', (req,res) => {
-    
+router.post('/resources', async (req,res) =>{
+    const resourcesData = req.body
+ 
+   await db.addResource(resourcesData)
+    .then(resource => {
+        res.status(201).json(resource)
+    })
+    .catch(err => {
+        res.status(500).json({message:"cannot add resource"})
+    })
+ })
+
+router.get('/resources', async (req,res) => {
+    await db.findResource()
+    .then(resources => {
+        res.json(resources);
+    })
+    .catch(err => {
+        res.status(500).json({message: "cant retrieve resources"})
+    })
+})
+
+router.post('/tasks', async (req,res) => {
+    const taskData = req.body
+
+    await db.addTask(taskData)
+    .then(tasks => {
+        res.status(201).json(tasks)
+    })
+    .catch(err => {
+        res.status(500).json({message: "cannot add task"})
+    })
+
 })
 
 
-
+router.get('/tasks', async (req,res) => {
+    await db.findTasks()
+    .then(task => {
+        res.json(task);
+    })
+    .catch(err => {
+        res.status(500).json({message: "cant retrieve tasks"})
+    })
+})
 module.exports = router;
